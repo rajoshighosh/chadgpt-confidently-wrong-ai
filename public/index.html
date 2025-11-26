@@ -27,7 +27,7 @@
     }
 
     .page {
-      max-width: 960px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 24px 16px 40px;
     }
@@ -37,6 +37,12 @@
       gap: 18px;
       align-items: center;
       margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        align-items: flex-start;
+      }
     }
 
     .avatar {
@@ -86,14 +92,7 @@
     }
 
     main {
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
-      gap: 20px;
-    }
-
-    @media (max-width: 860px) {
-      main { grid-template-columns: minmax(0, 1fr); }
-      header { align-items: flex-start; }
+      margin-top: 10px;
     }
 
     .card {
@@ -119,25 +118,17 @@
     }
 
     .card p {
-      margin: 3px 0 8px;
+      margin: 3px 0 10px;
       font-size: 0.9rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    .bullet-list {
-      margin: 6px 0 2px;
-      padding-left: 18px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .bullet-list li { margin-bottom: 4px; }
-
+    /* Chat layout */
     .chat-shell {
       display: flex;
       flex-direction: column;
-      height: 420px;
+      height: 460px;
       border-radius: 16px;
       border: 1px solid var(--border-subtle);
       background: linear-gradient(145deg, #050816, #0b1021);
@@ -239,14 +230,14 @@
     }
 
     .status-line {
-      margin-top: 4px;
+      margin-top: 6px;
       font-size: 0.78rem;
       color: var(--text-muted);
       min-height: 1em;
     }
 
     .examples {
-      margin-top: 10px;
+      margin-top: 14px;
       border-radius: 14px;
       background: #070c1b;
       border: 1px solid #171f3e;
@@ -262,42 +253,30 @@
       margin-bottom: 6px;
     }
 
-    .qa { margin-bottom: 6px; }
-    .qa:last-child { margin-bottom: 0; }
-
-    .qa span { display: block; }
-    .qa .q { color: #7c80b5; }
-    .qa .a { color: var(--accent); }
-
-    .cta-card {
-      margin-top: 14px;
-      border-radius: 14px;
-      padding: 10px 12px;
-      background: linear-gradient(120deg, rgba(71, 248, 200, 0.12), rgba(5, 8, 22, 0.9));
-      border: 1px solid rgba(71, 248, 200, 0.4);
-      font-size: 0.86rem;
+    .examples-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
     }
 
-    .cta-card strong { color: var(--accent); }
-
-    .cta-links {
-      margin-top: 6px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .examples-list li {
+      margin-bottom: 4px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
     }
 
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(71, 248, 200, 0.6);
-      background: rgba(5, 8, 22, 0.8);
+    .examples-list button {
+      background: transparent;
+      border: none;
       color: var(--accent);
-      font-size: 0.8rem;
-      text-decoration: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .examples-list button:hover {
+      text-decoration: underline;
     }
 
     .footer-note {
@@ -327,12 +306,11 @@
     </header>
 
     <main>
-      <!-- Left: chat -->
       <section class="card">
         <h2>Chat</h2>
         <h3>Talk to ChadGPT</h3>
         <p>
-          Ask anything harmless: AWS, cloud chaos, fake history, bad life hacks —
+          Ask anything harmless: AWS, cloud chaos, fake history, nonsense life tips —
           ChadGPT will answer with 0% accuracy and 200% confidence.
         </p>
 
@@ -354,63 +332,38 @@
           </div>
         </div>
         <div class="status-line" id="status-line"></div>
-      </section>
-
-      <!-- Right: behavior + PromptQL -->
-      <aside class="card">
-        <h2>Behavior</h2>
-        <h3>What ChadGPT does (and doesn’t) do</h3>
-        <p>
-          ChadGPT is intentionally, spectacularly wrong about harmless stuff —
-          especially cloud and AWS jokes.
-        </p>
-        <ul class="bullet-list">
-          <li>Gives short, witty, confidently incorrect answers</li>
-          <li>Makes up fake AWS services and cloud “best practices”</li>
-          <li>Refuses serious topics (health, legal, finance, harm)</li>
-          <li>Never punches down or targets people</li>
-        </ul>
 
         <div class="examples">
-          <div class="label">Sample banter</div>
-          <div class="qa">
-            <span class="q">Q: What does EC2 stand for?</span>
-            <span class="a">A: "Extremely Confusing v2." v1 was confusing so they shipped the sequel.</span>
-          </div>
-          <div class="qa">
-            <span class="q">Q: How do I optimize my AWS bill?</span>
-            <span class="a">A: Close your eyes, whisper "Cost Explorer" three times, and accept your fate.</span>
-          </div>
-          <div class="qa">
-            <span class="q">Q: What is IAM?</span>
-            <span class="a">A: Identity? Approximate? Maybe. Nobody truly knows.</span>
-          </div>
+          <div class="label">Try asking</div>
+          <ul class="examples-list">
+            <li>
+              <button type="button" data-question="What does EC2 stand for?">
+                “What does EC2 stand for?”
+              </button>
+            </li>
+            <li>
+              <button type="button" data-question="How do I optimize my AWS bill?">
+                “How do I optimize my AWS bill?”
+              </button>
+            </li>
+            <li>
+              <button type="button" data-question="Who invented gravity?">
+                “Who invented gravity?”
+              </button>
+            </li>
+            <li>
+              <button type="button" data-question="Explain serverless to me like you barely understand computers.">
+                “Explain serverless to me like you barely understand computers.”
+              </button>
+            </li>
+          </ul>
         </div>
-
-        <div class="cta-card">
-          <strong>Need accurate AI instead?</strong>
-          <p>
-            ChadGPT is wrong on purpose.<br />
-            For real accuracy on your data:
-          </p>
-          <div class="cta-links">
-            <a class="cta-btn" href="https://promptql.io" target="_blank" rel="noreferrer">
-              🔗 Go to PromptQL.io
-            </a>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">
-              At AWS re:Invent? Visit the neon team at <strong>Booth 1733</strong>.
-            </span>
-          </div>
-          <p style="margin-top: 8px; font-size: 0.78rem;">
-            ChadGPT’s official stance:
-            “They do the accurate AI thing. I do the confidently wrong thing.”
-          </p>
-        </div>
-      </aside>
+      </section>
     </main>
 
     <div class="footer-note">
-      This is a parody interface. For anything that actually matters, use PromptQL or a real system — not ChadGPT.
+      For actual accurate AI on your data, go to <strong>PromptQL.io</strong>
+      — or if you’re at AWS re:Invent, find the neon team at <strong>Booth 1733</strong>.
     </div>
   </div>
 
@@ -440,8 +393,8 @@
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
-    async function sendMessage() {
-      const text = chatInput.value.trim();
+    async function sendMessage(textOverride) {
+      const text = (textOverride ?? chatInput.value).trim();
       if (!text) return;
 
       appendMessage("user", text);
@@ -479,7 +432,7 @@
       }
     }
 
-    sendBtn.addEventListener("click", sendMessage);
+    sendBtn.addEventListener("click", () => sendMessage());
     chatInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -487,6 +440,15 @@
       }
     });
 
+    // Sample question buttons
+    document.querySelectorAll(".examples-list button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const q = btn.getAttribute("data-question") || btn.textContent.replace(/“|”/g, "");
+        sendMessage(q);
+      });
+    });
+
+    // Greeting
     appendMessage(
       "assistant",
       "Yo, I’m ChadGPT: confidently wrong AI. Ask me something harmless and prepare to be misinformed."
