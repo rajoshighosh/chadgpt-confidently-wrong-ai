@@ -6,16 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      /* ChatGPT authentic palette */
-      --bg-main: #202123;
-      --bg-card: #343541;
-      --bg-bubble-user: #343541;
-      --bg-bubble-bot: #444654;
-      --border: #565869;
-      --text-main: #ECECF1;
-      --text-muted: #ACACBE;
-      --accent: #10a37f;
-      --accent-soft: rgba(16,163,127,0.12);
+      /* THEME A — Neon Dark (restored) */
+      --bg-main: #050816;
+      --bg-card: #0b1021;
+      --bg-bubble-user: #161d3a;
+      --bg-bubble-bot: #070c1c;
+      --border: #1b2140;
+      --accent: #47f8c8;
+      --accent-soft: rgba(71, 248, 200, 0.12);
+
+      --text-main: #e6e9ff;
+      --text-muted: #9aa1c5;
+
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
     }
 
@@ -23,7 +25,7 @@
 
     body {
       margin: 0;
-      background: var(--bg-main);
+      background: radial-gradient(circle at top, #111b3a 0, #050816 40%, #02030a 100%);
       font-family: var(--font);
       color: var(--text-main);
     }
@@ -37,59 +39,59 @@
     header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      background: radial-gradient(circle at 20% 0, #ffd86b, #f97373 45%, #1f2937 100%);
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 20% 0, #ff93e1, #6f3bff 45%, #1f1f48 100%);
+      border: 2px solid rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 30px;
     }
 
     .title-block h1 {
       margin: 0 0 4px;
-      font-size: 1.55rem;
+      font-size: 1.7rem;
       font-weight: 600;
     }
 
     .title-block .tagline {
+      font-size: 0.95rem;
       color: var(--text-muted);
-      font-size: 0.96rem;
-      margin-top: 1px;
     }
 
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 16px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
     }
 
     .card h3 {
       margin: 0 0 8px;
-      font-size: 1.08rem;
+      font-size: 1.05rem;
       font-weight: 500;
     }
 
     .card p {
       margin: 2px 0 12px;
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       line-height: 1.5;
     }
 
-    /* CHAT UI */
+    /* Chat layout */
     .chat-shell {
-      background: var(--bg-card);
-      border-radius: 10px;
       border: 1px solid var(--border);
+      background: var(--bg-card);
+      border-radius: 12px;
       height: 480px;
       display: flex;
       flex-direction: column;
@@ -97,56 +99,55 @@
     }
 
     .chat-header {
-      height: 44px;
       padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      color: var(--text-muted);
       font-size: 0.82rem;
+      color: var(--text-muted);
     }
 
     .chat-header strong {
       color: var(--accent);
-      font-weight: 500;
     }
 
     .chat-log {
       flex: 1;
       padding: 14px;
       overflow-y: auto;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
 
     .msg {
       max-width: 80%;
       padding: 10px 14px;
+      border-radius: 10px;
       margin-bottom: 14px;
-      border-radius: 6px;
       line-height: 1.48;
+      border: 1px solid transparent;
     }
 
     .msg.user {
-      background: var(--bg-bubble-user);
       margin-left: auto;
-      border: 1px solid var(--border);
+      background: var(--bg-bubble-user);
+      border-color: #252f61;
     }
 
     .msg.bot {
-      background: var(--bg-bubble-bot);
       margin-right: auto;
-      border: 1px solid var(--border);
+      background: var(--bg-bubble-bot);
+      border-color: var(--border);
     }
 
     .role {
       display: block;
       font-size: 0.72rem;
-      opacity: 0.75;
+      opacity: 0.7;
       margin-bottom: 2px;
       letter-spacing: 0.06em;
     }
 
-    .msg.user .role { color: var(--text-muted); }
+    .msg.user .role { color: #a3a7ff; }
     .msg.bot .role { color: var(--accent); }
 
     .chat-footer {
@@ -154,40 +155,41 @@
       padding: 10px;
       display: flex;
       gap: 8px;
-      background: var(--bg-card);
+      align-items: center;
     }
 
     .chat-input {
       flex: 1;
+      background: #050816;
+      border: 1px solid #2b3358;
+      border-radius: 999px;
       padding: 8px 12px;
-      background: var(--bg-main);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.92rem;
       color: var(--text-main);
+      font-size: 0.9rem;
     }
 
-    .chat-input::placeholder { color: var(--text-muted); }
+    .chat-input::placeholder {
+      color: #5c6293;
+    }
 
     .send-btn {
-      background: var(--accent);
-      border: none;
-      color: white;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
       padding: 8px 16px;
-      font-size: 0.88rem;
-      border-radius: 6px;
+      border-radius: 999px;
       cursor: pointer;
+      font-size: 0.88rem;
     }
 
     .send-btn:disabled {
       opacity: 0.6;
-      cursor: default;
     }
 
     .examples {
       margin-top: 14px;
       padding: 12px;
-      background: #2c2d31;
+      background: #0a0f24;
       border-radius: 10px;
       border: 1px solid var(--border);
     }
@@ -195,30 +197,30 @@
     .examples .label {
       text-transform: uppercase;
       font-size: 0.76rem;
+      letter-spacing: 0.12em;
       color: var(--text-muted);
       margin-bottom: 6px;
-      letter-spacing: 0.12em;
     }
 
     .examples-list {
       list-style: none;
-      padding: 0;
-      margin: 0;
+      margin: 0; padding: 0;
     }
 
     .examples-list button {
-      background: transparent;
+      background: none;
       border: none;
-      color: var(--text-main);
-      padding: 0;
-      font: inherit;
+      color: var(--accent);
       cursor: pointer;
+      font: inherit;
+      font-size: 0.9rem;
       margin-bottom: 4px;
       text-align: left;
+      padding: 0;
     }
 
     .examples-list button:hover {
-      color: var(--accent);
+      text-decoration: underline;
     }
 
     .footer-note {
@@ -230,6 +232,11 @@
 
     .footer-note a {
       color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -240,7 +247,7 @@
       <div class="avatar">🧠</div>
       <div class="title-block">
         <h1>ChadGPT – Confidently Wrong AI</h1>
-        <div class="tagline">Ask Chad Anything! Get 0% accuracy and 200% confidence.</div>
+        <div class="tagline">Ask Chad Anything — Get 0% accuracy and 200% confidence.</div>
       </div>
     </header>
 
@@ -269,14 +276,14 @@
             <li><button data-question="What does EC2 stand for?">“What does EC2 stand for?”</button></li>
             <li><button data-question="How do I design a multi-region AWS architecture?">“How do I design a multi-region AWS architecture?”</button></li>
             <li><button data-question="Who invented gravity, and why?">“Who invented gravity, and why?”</button></li>
-            <li><button data-question="Explain serverless to me like I’m a VP of Engineering.">“Explain serverless like I’m a VP of Engineering.”</button></li>
+            <li><button data-question="Explain serverless like I’m a VP of Engineering.">“Explain serverless like I’m a VP of Engineering.”</button></li>
           </ul>
         </div>
       </section>
     </main>
 
     <div class="footer-note">
-      For real accuracy, visit <a href="https://promptql.io" target="_blank">promptql.io</a> — or see the neon team at <strong>Booth 1733</strong>.
+      For real accuracy, visit <a href="https://promptql.io" target="_blank">PromptQL.io</a> — or see the neon team at <strong>Booth 1733</strong>.
     </div>
   </div>
 
@@ -324,12 +331,11 @@
         });
 
         const data = await res.json();
-        const reply = data.reply;
+        appendMessage("assistant", data.reply);
+        history.push({ role: "assistant", content: data.reply });
 
-        appendMessage("assistant", reply);
-        history.push({ role: "assistant", content: reply });
-      } catch (err) {
-        appendMessage("assistant", "ChadGPT encountered an unexpected burst of confidence. Try again.");
+      } catch {
+        appendMessage("assistant", "ChadGPT experienced a surge of unearned confidence. Try again.");
       } finally {
         sendBtn.disabled = false;
       }
@@ -344,9 +350,7 @@
     });
 
     document.querySelectorAll(".examples-list button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        sendMessage(btn.dataset.question);
-      });
+      btn.addEventListener("click", () => sendMessage(btn.dataset.question));
     });
 
     appendMessage("assistant", "Hello, I’m ChadGPT. Ask me anything. I promise confidence, not correctness.");
