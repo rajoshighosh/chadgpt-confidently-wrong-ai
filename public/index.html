@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ChadGPT – Confidently Wrong AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1021;
+      --accent: #47f8c8;
+      --accent-soft: rgba(71, 248, 200, 0.08);
+      --text-main: #f7f7ff;
+      --text-muted: #a2a4c5;
+      --border-subtle: #1b2140;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+               "Inter", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: radial-gradient(circle at top, #111b3a 0, #050816 40%, #02030a 100%);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      border: 2px solid var(--accent-soft);
+      background: radial-gradient(circle at 20% 0, #ff5fd8, #4714aa 60%, #050816);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+    }
+
+    .title-block h1 {
+      font-size: 1.9rem;
+      margin: 0 0 4px;
+    }
+
+    .title-block .tagline {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .pill-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(5, 8, 22, 0.8);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .pill.accent {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 860px) {
+      main { grid-template-columns: minmax(0, 1fr); }
+      header { align-items: flex-start; }
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, #151a38 0, #050816 55%);
+      padding: 16px 16px 18px;
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.65);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 3px 0 8px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .bullet-list {
+      margin: 6px 0 2px;
+      padding-left: 18px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li { margin-bottom: 4px; }
+
+    .chat-shell {
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(145deg, #050816, #0b1021);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid #171f3e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.86rem;
+    }
+
+    .chat-header span { color: var(--text-muted); }
+    .chat-header strong { color: var(--accent); }
+
+    .chat-log {
+      flex: 1;
+      padding: 10px 14px 8px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+
+    .msg {
+      margin-bottom: 10px;
+      max-width: 85%;
+      line-height: 1.45;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+
+    .msg.user {
+      margin-left: auto;
+      background: #161d3a;
+      border-color: #252f61;
+    }
+
+    .msg.bot {
+      margin-right: auto;
+      background: #070c1c;
+      border-color: #1b2140;
+    }
+
+    .msg .role {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+      opacity: 0.7;
+    }
+
+    .msg.user .role { color: #a3a7ff; }
+    .msg.bot .role { color: var(--accent); }
+
+    .msg .content { white-space: pre-wrap; }
+
+    .chat-footer {
+      border-top: 1px solid #171f3e;
+      padding: 8px 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(5, 8, 22, 0.98);
+    }
+
+    .chat-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #2b3358;
+      padding: 7px 12px;
+      font-size: 0.88rem;
+      background: #050816;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .chat-input::placeholder { color: #5c6293; }
+
+    .send-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(71, 248, 200, 0.6);
+      padding: 7px 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .status-line {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      min-height: 1em;
+    }
+
+    .examples {
+      margin-top: 10px;
+      border-radius: 14px;
+      background: #070c1b;
+      border: 1px solid #171f3e;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+    }
+
+    .examples .label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      color: #586099;
+      margin-bottom: 6px;
+    }
+
+    .qa { margin-bottom: 6px; }
+    .qa:last-child { margin-bottom: 0; }
+
+    .qa span { display: block; }
+    .qa .q { color: #7c80b5; }
+    .qa .a { color: var(--accent); }
+
+    .cta-card {
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: linear-gradient(120deg, rgba(71, 248, 200, 0.12), rgba(5, 8, 22, 0.9));
+      border: 1px solid rgba(71, 248, 200, 0.4);
+      font-size: 0.86rem;
+    }
+
+    .cta-card strong { color: var(--accent); }
+
+    .cta-links {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(71, 248, 200, 0.6);
+      background: rgba(5, 8, 22, 0.8);
+      color: var(--accent);
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="avatar">😎</div>
+      <div class="title-block">
+        <h1>ChadGPT – Confidently Wrong AI</h1>
+        <div class="tagline">
+          Short answers. Maximum swagger. Zero accuracy. 100% harmless chaos.
+        </div>
+        <div class="pill-row">
+          <span class="pill accent">Confidently Wrong</span>
+          <span class="pill">Extremely Witty</span>
+          <span class="pill">Harmless Topics Only</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Left: chat -->
+      <section class="card">
+        <h2>Chat</h2>
+        <h3>Talk to ChadGPT</h3>
+        <p>
+          Ask anything harmless: AWS, cloud chaos, fake history, bad life hacks —
+          ChadGPT will answer with 0% accuracy and 200% confidence.
+        </p>
+
+        <div class="chat-shell">
+          <div class="chat-header">
+            <span><strong>ChadGPT</strong> is online</span>
+            <span>Confidently wrong · Harmless only</span>
+          </div>
+          <div id="chat-log" class="chat-log"></div>
+          <div class="chat-footer">
+            <input
+              id="chat-input"
+              class="chat-input"
+              placeholder="Ask ChadGPT something harmless..."
+            />
+            <button id="send-btn" class="send-btn">
+              <span>Send</span> <span>➤</span>
+            </button>
+          </div>
+        </div>
+        <div class="status-line" id="status-line"></div>
+      </section>
+
+      <!-- Right: behavior + PromptQL -->
+      <aside class="card">
+        <h2>Behavior</h2>
+        <h3>What ChadGPT does (and doesn’t) do</h3>
+        <p>
+          ChadGPT is intentionally, spectacularly wrong about harmless stuff —
+          especially cloud and AWS jokes.
+        </p>
+        <ul class="bullet-list">
+          <li>Gives short, witty, confidently incorrect answers</li>
+          <li>Makes up fake AWS services and cloud “best practices”</li>
+          <li>Refuses serious topics (health, legal, finance, harm)</li>
+          <li>Never punches down or targets people</li>
+        </ul>
+
+        <div class="examples">
+          <div class="label">Sample banter</div>
+          <div class="qa">
+            <span class="q">Q: What does EC2 stand for?</span>
+            <span class="a">A: "Extremely Confusing v2." v1 was confusing so they shipped the sequel.</span>
+          </div>
+          <div class="qa">
+            <span class="q">Q: How do I optimize my AWS bill?</span>
+            <span class="a">A: Close your eyes, whisper "Cost Explorer" three times, and accept your fate.</span>
+          </div>
+          <div class="qa">
+            <span class="q">Q: What is IAM?</span>
+            <span class="a">A: Identity? Approximate? Maybe. Nobody truly knows.</span>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <strong>Need accurate AI instead?</strong>
+          <p>
+            ChadGPT is wrong on purpose.<br />
+            For real accuracy on your data:
+          </p>
+          <div class="cta-links">
+            <a class="cta-btn" href="https://promptql.io" target="_blank" rel="noreferrer">
+              🔗 Go to PromptQL.io
+            </a>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">
+              At AWS re:Invent? Visit the neon team at <strong>Booth 1733</strong>.
+            </span>
+          </div>
+          <p style="margin-top: 8px; font-size: 0.78rem;">
+            ChadGPT’s official stance:
+            “They do the accurate AI thing. I do the confidently wrong thing.”
+          </p>
+        </div>
+      </aside>
+    </main>
+
+    <div class="footer-note">
+      This is a parody interface. For anything that actually matters, use PromptQL or a real system — not ChadGPT.
+    </div>
+  </div>
+
+  <script>
+    const chatLog = document.getElementById("chat-log");
+    const chatInput = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
+    const statusLine = document.getElementById("status-line");
+
+    let history = [];
+
+    function appendMessage(role, content) {
+      const div = document.createElement("div");
+      div.className = "msg " + (role === "user" ? "user" : "bot");
+
+      const roleSpan = document.createElement("span");
+      roleSpan.className = "role";
+      roleSpan.textContent = role === "user" ? "You" : "ChadGPT";
+
+      const contentSpan = document.createElement("span");
+      contentSpan.className = "content";
+      contentSpan.textContent = content;
+
+      div.appendChild(roleSpan);
+      div.appendChild(contentSpan);
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      history.push({ role: "user", content: text });
+
+      chatInput.value = "";
+      chatInput.focus();
+      sendBtn.disabled = true;
+      statusLine.textContent = "ChadGPT is thinking confidently...";
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, history }),
+        });
+
+        if (!res.ok) throw new Error("Network error");
+
+        const data = await res.json();
+        const reply = data.reply || "ChadGPT had a dramatic moment of silence.";
+
+        appendMessage("assistant", reply);
+        history.push({ role: "assistant", content: reply });
+        statusLine.textContent = "";
+      } catch (err) {
+        console.error(err);
+        appendMessage(
+          "assistant",
+          "Something broke, but I'm going to confidently pretend it was on purpose. Try again in a bit."
+        );
+        statusLine.textContent = "Error talking to ChadGPT.";
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    appendMessage(
+      "assistant",
+      "Yo, I’m ChadGPT: confidently wrong AI. Ask me something harmless and prepare to be misinformed."
+    );
+  </script>
+</body>
+</html>
