@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      /* THEME A — Neon Dark (restored) */
+      /* THEME A — Neon Dark */
       --bg-main: #050816;
       --bg-card: #0b1021;
       --bg-bubble-user: #161d3a;
@@ -312,6 +312,40 @@
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
+    // Typing animation for assistant messages
+    function typeWriterEffect(text, targetNode, speed = 18) {
+      let i = 0;
+      function step() {
+        if (i < text.length) {
+          targetNode.textContent += text.charAt(i);
+          i++;
+          chatLog.scrollTop = chatLog.scrollHeight;
+          setTimeout(step, speed);
+        }
+      }
+      step();
+    }
+
+    function appendAssistantTyping(content) {
+      const div = document.createElement("div");
+      div.className = "msg bot";
+
+      const roleSpan = document.createElement("span");
+      roleSpan.className = "role";
+      roleSpan.textContent = "ChadGPT";
+
+      const contentSpan = document.createElement("span");
+      contentSpan.className = "content";
+      contentSpan.textContent = "";
+
+      div.appendChild(roleSpan);
+      div.appendChild(contentSpan);
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      typeWriterEffect(content, contentSpan, 18);
+    }
+
     async function sendMessage(textOverride) {
       const text = (textOverride ?? chatInput.value).trim();
       if (!text) return;
@@ -331,11 +365,13 @@
         });
 
         const data = await res.json();
-        appendMessage("assistant", data.reply);
-        history.push({ role: "assistant", content: data.reply });
+        const reply = data.reply || "ChadGPT experienced a surge of unearned confidence. Try again.";
+
+        appendAssistantTyping(reply);
+        history.push({ role: "assistant", content: reply });
 
       } catch {
-        appendMessage("assistant", "ChadGPT experienced a surge of unearned confidence. Try again.");
+        appendAssistantTyping("ChadGPT experienced a surge of unearned confidence. Try again.");
       } finally {
         sendBtn.disabled = false;
       }
@@ -353,7 +389,8 @@
       btn.addEventListener("click", () => sendMessage(btn.dataset.question));
     });
 
-    appendMessage("assistant", "Hello, I’m ChadGPT. Ask me anything. I promise confidence, not correctness.");
+    // Initial greeting with typing effect
+    appendAssistantTyping("Hello, I’m ChadGPT. Ask me anything. I promise confidence, not correctness.");
   </script>
 </body>
 </html>
